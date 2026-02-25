@@ -1,3 +1,5 @@
+# @runtime Jython
+
 # Verify the '.text' section is loaded
 assert('.text' in [b.name for b in getMemoryBlocks()])
 
