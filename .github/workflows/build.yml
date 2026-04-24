@@ -144,7 +144,6 @@ jobs:
           test -e TEST_PASS
 
   release:
-    if: github.ref == 'refs/heads/master'
     needs: [build, test]
     runs-on: ubuntu-latest
     steps:
