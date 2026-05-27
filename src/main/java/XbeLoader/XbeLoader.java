@@ -9,7 +9,6 @@ import ghidra.app.util.bin.BinaryReader;
 import ghidra.app.util.bin.StructConverter;
 import ghidra.app.util.importer.MessageLog;
 import ghidra.app.util.opinion.AbstractLibrarySupportLoader;
-import ghidra.app.util.opinion.Loader;
 import ghidra.app.util.opinion.LoadSpec;
 import ghidra.framework.model.DomainObject;
 import ghidra.program.model.listing.Program;
@@ -452,11 +451,9 @@ public class XbeLoader extends AbstractLibrarySupportLoader {
 	}
 
 	@Override
-	protected void load(Program program, Loader.ImporterSettings settings)
+	protected void load(ByteProvider provider, LoadSpec loadSpec, List<Option> options,
+			Program program, TaskMonitor monitor, MessageLog log)
 			throws CancelledException, IOException {
-		ByteProvider provider = settings.provider();
-		TaskMonitor monitor = settings.monitor();
-		MessageLog log = settings.log();
 		BinaryReader reader = new BinaryReader(provider, true);
 		FlatProgramAPI api = new FlatProgramAPI(program, monitor);
 		this.program = program;
@@ -687,9 +684,9 @@ public class XbeLoader extends AbstractLibrarySupportLoader {
 
 	@Override
 	public List<Option> getDefaultOptions(ByteProvider provider, LoadSpec loadSpec,
-			DomainObject domainObject, boolean isLoadIntoProgram, boolean mirrorFsLayout) {
+			DomainObject domainObject, boolean isLoadIntoProgram) {
 		List<Option> list =
-			super.getDefaultOptions(provider, loadSpec, domainObject, isLoadIntoProgram, mirrorFsLayout);
+			super.getDefaultOptions(provider, loadSpec, domainObject, isLoadIntoProgram);
 
 		// TODO: If this loader has custom options, add them to 'list'
 		// list.add(new Option("Option name goes here", "Default option value goes here"));
