@@ -23,11 +23,9 @@ jobs:
       matrix:
         # GHIDRA VERSIONS - Don't forget to also update the test job when updating this
         ghidra:
-          - "12.0"
-          - "12.0.1"
-          - "12.0.2"
-          - "12.0.3"
           - "12.0.4"
+          - "12.1"
+          - "12.1.2"
     steps:
       - uses: actions/checkout@v6
 
@@ -41,11 +39,20 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
       - name: Setup Ghidra
         uses: antoniovazquezblanco/setup-ghidra@v2
         with:
           version: ${{ matrix.ghidra }}
           auth_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pre-install PyGhidra
+        run: |
+          python -m pip install --user --no-index \
+            -f "$GHIDRA_INSTALL_DIR/Ghidra/Features/PyGhidra/pypkg/dist" pyghidra
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
@@ -89,7 +96,7 @@ jobs:
       - name: Run tests
         run: |
           cd tests
-          $GHIDRA_INSTALL_DIR/support/analyzeHeadless . test_project \
+          "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H . test_project \
             -import xbefiles/triangle.xbe \
             -postScript ./test_load.py
           test -e TEST_PASS
@@ -107,7 +114,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         # GHIDRA VERSIONS - Only set to latest due to GHA rate limits
-        ghidra: [ "12.0.4" ]
+        ghidra: [ "12.1.2" ]
     steps:
       - uses: actions/checkout@v6
 
@@ -121,11 +128,21 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
       - name: Setup Ghidra
         uses: antoniovazquezblanco/setup-ghidra@v2
         with:
           version: ${{ matrix.ghidra }}
           auth_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pre-install PyGhidra
+        shell: bash
+        run: |
+          python -m pip install --user --no-index \
+            -f "$GHIDRA_INSTALL_DIR/Ghidra/Features/PyGhidra/pypkg/dist" pyghidra
 
       - name: Install extension
         shell: bash
@@ -139,9 +156,9 @@ jobs:
         run: |
           cd tests
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            "$GHIDRA_INSTALL_DIR/support/analyzeHeadless.bat" . test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+            "$GHIDRA_INSTALL_DIR/support/pyghidraRun.bat" -H . test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
           else
-            "$GHIDRA_INSTALL_DIR/support/analyzeHeadless" . test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+            "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H . test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
           fi
           test -e TEST_PASS
 

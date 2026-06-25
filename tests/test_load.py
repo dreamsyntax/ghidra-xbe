@@ -1,7 +1,7 @@
-# @runtime Jython
+# @runtime pyGhidra
 
 # Verify the '.text' section is loaded
-assert('.text' in [b.name for b in getMemoryBlocks()])
+assert '.text' in [b.name for b in getMemoryBlocks()]
 
 # Verify the entry point has been marked
 entry = None
