@@ -73,7 +73,7 @@ if [[ "$RUNTESTS" == "1" || "$CI" == "true" ]]; then
 
 	echo "[*] Running tests..."
 	pushd tests
-	$GHIDRA_INSTALL_DIR/support/pyghidraRun -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+	printf 'y\ny\n' | $GHIDRA_INSTALL_DIR/support/pyghidraRun -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
 	if [[ -e TEST_PASS ]]; then
 		echo "[+] Test PASSED"
 	else

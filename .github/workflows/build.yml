@@ -87,8 +87,9 @@ jobs:
       - name: Run tests
         run: |
           cd tests
-          # Pipe "y" to auto-answer PyGhidra's first-run install prompt (it creates its own venv)
-          printf 'y\n' | "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H "$PWD" test_project \
+          # Pipe "y" answers to auto-answer PyGhidra's first-run install prompts
+          # (Windows asks twice; extra input is ignored on single-prompt platforms)
+          printf 'y\ny\n' | "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H "$PWD" test_project \
             -import xbefiles/triangle.xbe \
             -postScript ./test_load.py
           test -e TEST_PASS
@@ -137,11 +138,12 @@ jobs:
         shell: bash
         run: |
           cd tests
-          # Pipe "y" to auto-answer PyGhidra's first-run install prompt (it creates its own venv)
+          # Pipe "y" answers to auto-answer PyGhidra's first-run install prompts
+          # (Windows asks twice; extra input is ignored on single-prompt platforms)
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            printf 'y\n' | "$GHIDRA_INSTALL_DIR/support/pyghidraRun.bat" -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+            printf 'y\ny\n' | "$GHIDRA_INSTALL_DIR/support/pyghidraRun.bat" -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
           else
-            printf 'y\n' | "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+            printf 'y\ny\n' | "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
           fi
           test -e TEST_PASS
 
