@@ -96,7 +96,7 @@ jobs:
       - name: Run tests
         run: |
           cd tests
-          "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H . test_project \
+          "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H "$PWD" test_project \
             -import xbefiles/triangle.xbe \
             -postScript ./test_load.py
           test -e TEST_PASS
@@ -156,9 +156,9 @@ jobs:
         run: |
           cd tests
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            "$GHIDRA_INSTALL_DIR/support/pyghidraRun.bat" -H . test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+            "$GHIDRA_INSTALL_DIR/support/pyghidraRun.bat" -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
           else
-            "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H . test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
+            "$GHIDRA_INSTALL_DIR/support/pyghidraRun" -H "$PWD" test_project -import xbefiles/triangle.xbe -postScript ./test_load.py
           fi
           test -e TEST_PASS
 
